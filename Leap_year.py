@@ -32,7 +32,7 @@ while True:
             
         else:
             continue
-
+            
     print('Готов :)')
     go = input('Хотите начать с начала? (Y/N)').upper()
     if go not in ('Y', 'Н'):
