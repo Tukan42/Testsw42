@@ -1,0 +1,31 @@
+import os
+import time
+import psutil
+
+TARGET_LABEL = "MY_USB"  # Укажи нужное имя флешки (метку тома)
+
+def get_usb_drives():
+    """Возвращает список имен всех подключённых USB-накопителей"""
+    drives = []
+    for part in psutil.disk_partitions(all=True):
+        if "removable" in part.opts or "usb" in part.device.lower():
+            try:
+                label = os.popen(f'lsblk -no LABEL {part.device}').read().strip()
+                if label:
+                    drives.append(label)
+            except Exception:
+                pass
+    return drives
+
+def main():
+    while True:
+        usb_drives = get_usb_drives()
+        if TARGET_LABEL in usb_drives:
+            print("Найдено целевое USB! Выключаю компьютер...")
+            os.system("shutdown /s /t 1")  # Windows
+            # os.system("poweroff")  # Linux
+            break
+        time.sleep(5)  # Проверяем каждые 5 секунд
+
+if name == "__main__":
+    main()
